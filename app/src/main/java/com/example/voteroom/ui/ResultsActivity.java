@@ -1,8 +1,10 @@
-package com.example.voteroom;
+package com.example.voteroom.ui;
 
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.voteroom.R;
 
 public class ResultsActivity extends AppCompatActivity {
     @Override

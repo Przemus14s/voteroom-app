@@ -13,19 +13,19 @@
         android:theme="@style/Theme.VoteRoom"
         tools:targetApi="31">
 
-        <activity android:name=".MainActivity" android:exported="true">
+        <activity android:name=".ui.MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ModeratorLoginActivity" />
-        <activity android:name=".JoinRoomActivity" />
-        <activity android:name=".ModeratorRoomActivity" />
-        <activity android:name=".AddQuestionActivity" />
-        <activity android:name=".VoteActivity" />
-        <activity android:name=".ResultsActivity" />
-        <activity android:name=".SummaryActivity" />
+        <activity android:name=".ui.ModeratorLoginActivity" />
+        <activity android:name=".ui.JoinRoomActivity" />
+        <activity android:name=".ui.ModeratorRoomActivity" />
+        <activity android:name=".ui.AddQuestionActivity" />
+        <activity android:name=".ui.VoteActivity" />
+        <activity android:name=".ui.ResultsActivity" />
+        <activity android:name=".ui.SummaryActivity" />
 
     </application>
 

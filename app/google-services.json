@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "146281462299",
+    "project_id": "voteroom",
+    "storage_bucket": "voteroom.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146281462299:android:7a4d119c49ecdd5ef856be",
+        "android_client_info": {
+          "package_name": "com.example.voteroom"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDli9NQi930PZm6DGT1zINyht-0OKDHygs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
