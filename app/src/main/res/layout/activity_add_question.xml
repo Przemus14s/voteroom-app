@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/addQuestionLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/addQuestionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dodaj Pytanie"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/questionField"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <EditText
+        android:id="@+id/questionField"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Treść pytania"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#888888"
+        android:inputType="text"
+        android:backgroundTint="#2196F3"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/addQuestionTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/option1Field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Opcja 1"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#888888"
+        android:inputType="text"
+        android:backgroundTint="#2196F3"
+        android:padding="12dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/questionField"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/option2Field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Opcja 2"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#888888"
+        android:inputType="text"
+        android:backgroundTint="#2196F3"
+        android:padding="12dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/option1Field"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/option3Field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Opcja 3 (opcjonalnie)"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#888888"
+        android:inputType="text"
+        android:backgroundTint="#2196F3"
+        android:padding="12dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/option2Field"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/option4Field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Opcja 4 (opcjonalnie)"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#888888"
+        android:inputType="text"
+        android:backgroundTint="#2196F3"
+        android:padding="12dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/option3Field"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/saveQuestionButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Zapisz Pytanie"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#4CAF50"
+        android:background="@drawable/rounded_button_green"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/option4Field"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
