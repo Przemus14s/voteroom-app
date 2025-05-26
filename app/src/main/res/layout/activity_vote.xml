@@ -5,7 +5,7 @@
     android:id="@+id/voteLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="#181A20"
     android:padding="24dp">
 
     <TextView
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Gdzie ma odbyć się wycieczka?"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp"
         app:layout_constraintTop_toTopOf="parent"

@@ -5,7 +5,7 @@
     android:id="@+id/addQuestionLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="#181A20"
     android:padding="24dp">
 
     <TextView
@@ -14,13 +14,12 @@
         android:layout_height="wrap_content"
         android:text="Dodaj Pytanie"
         android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/questionField"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.1" />
+        android:layout_marginBottom="20dp"/>
 
     <EditText
         android:id="@+id/questionField"
@@ -31,7 +30,7 @@
         android:textColorHint="#888888"
         android:inputType="text"
         android:backgroundTint="#2196F3"
-        android:padding="12dp"
+        android:padding="14dp"
         app:layout_constraintTop_toBottomOf="@id/addQuestionTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -45,8 +44,8 @@
         android:textColorHint="#888888"
         android:inputType="text"
         android:backgroundTint="#2196F3"
-        android:padding="12dp"
-        android:layout_marginTop="12dp"
+        android:padding="14dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/questionField"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -60,7 +59,7 @@
         android:textColorHint="#888888"
         android:inputType="text"
         android:backgroundTint="#2196F3"
-        android:padding="12dp"
+        android:padding="14dp"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/option1Field"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +74,7 @@
         android:textColorHint="#888888"
         android:inputType="text"
         android:backgroundTint="#2196F3"
-        android:padding="12dp"
+        android:padding="14dp"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/option2Field"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,7 +89,7 @@
         android:textColorHint="#888888"
         android:inputType="text"
         android:backgroundTint="#2196F3"
-        android:padding="12dp"
+        android:padding="14dp"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/option3Field"
         app:layout_constraintStart_toStartOf="parent"
@@ -110,5 +109,20 @@
         app:layout_constraintTop_toBottomOf="@id/option4Field"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="⬅ Wróć"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:background="@drawable/rounded_button_grey"
+        android:elevation="4dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/saveQuestionButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

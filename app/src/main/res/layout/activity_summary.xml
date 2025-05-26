@@ -5,7 +5,7 @@
     android:id="@+id/summaryLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="#181A20"
     android:padding="24dp">
 
     <TextView
@@ -45,5 +45,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/backToMainButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="⬅ Wróć do głównej"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:background="@drawable/rounded_button_grey"
+        android:elevation="4dp"
+        app:layout_constraintBottom_toTopOf="@id/generatePdfButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="12dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.example.voteroom;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,5 +13,13 @@ public class AddQuestionActivity extends AppCompatActivity {
 
         Button saveQuestionButton = findViewById(R.id.saveQuestionButton);
         saveQuestionButton.setOnClickListener(v -> finish());
+
+        Button backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AddQuestionActivity.this, ModeratorRoomActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+        });
     }
 }

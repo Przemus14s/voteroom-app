@@ -5,10 +5,9 @@
     android:id="@+id/moderatorRoomLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="#181A20"
     android:padding="16dp">
 
-    <!-- Tytuł -->
     <TextView
         android:id="@+id/roomTitleText"
         android:layout_width="0dp"
@@ -76,6 +75,18 @@
             android:backgroundTint="#F44336"
             android:textColor="#FFFFFF"
             android:background="@drawable/rounded_button_red" />
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⬅ Wróć"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:background="@drawable/rounded_button_grey"
+            android:elevation="4dp"
+            android:layout_marginTop="12dp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@ public class ModeratorRoomActivity extends AppCompatActivity {
 
         Button addQuestionButton = findViewById(R.id.addQuestionButton);
         Button closeRoomButton = findViewById(R.id.closeRoomButton);
+        Button backButton = findViewById(R.id.backButton);
 
         addQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -26,6 +27,13 @@ public class ModeratorRoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ModeratorRoomActivity.this, SummaryActivity.class));
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
