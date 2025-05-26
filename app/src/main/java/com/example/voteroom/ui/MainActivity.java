@@ -1,12 +1,11 @@
 package com.example.voteroom.ui;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
@@ -18,16 +17,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // TYMCZASOWE TESTOWANIE POŁĄCZENIA Z BAZĄ
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/");
-        DatabaseReference dbRef = database.getReference();
-        String logId = dbRef.child("logs").push().getKey();
-        if (logId != null) {
-            dbRef.child("logs").child(logId).setValue("test log :D")
-                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Log zapisany!"))
-                    .addOnFailureListener(e -> Log.e("Firebase", "Błąd zapisu: " + e.getMessage()));
-        }
 
         Button moderatorButton = findViewById(R.id.moderatorButton);
         Button userButton = findViewById(R.id.userButton);
