@@ -1,5 +1,7 @@
 package com.example.voteroom.ui;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         moderatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ModeratorLoginActivity.class));
+                startActivity(new Intent(MainActivity.this, ModeratorRoomActivity.class));
             }
         });
 
