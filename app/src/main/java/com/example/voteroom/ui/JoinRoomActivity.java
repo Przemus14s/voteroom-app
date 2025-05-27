@@ -52,7 +52,11 @@ public class JoinRoomActivity extends AppCompatActivity {
             }
             Boolean isActive = snapshot.child("active").getValue(Boolean.class);
             if (isActive == null || !isActive) {
-                Toast.makeText(this, "Pokój jest zamknięty", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(this, SummaryActivity.class);
+                intent.putExtra("ROOM_CODE", roomCode);
+                startActivity(intent);
+                finish();
                 return;
             }
             listenForRoomActive();

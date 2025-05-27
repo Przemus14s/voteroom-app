@@ -1,6 +1,7 @@
 package com.example.voteroom.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,31 +15,42 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class CreateRoomActivity extends AppCompatActivity {
     private EditText roomNameField;
+    private Button createRoomButton, backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_room);
 
+
+        SharedPreferences prefs = getSharedPreferences("moderator_prefs", MODE_PRIVATE);
+        String roomCode = prefs.getString("ROOM_CODE", null);
+        String roomName = prefs.getString("ROOM_NAME", null);
+
+        if (roomCode != null && roomName != null) {
+            DatabaseReference dbRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
+                    .getReference("rooms").child(roomCode).child("active");
+            dbRef.get().addOnSuccessListener(snapshot -> {
+                Boolean isActive = snapshot.getValue(Boolean.class);
+                if (isActive != null && isActive) {
+                    Intent intent = new Intent(this, ModeratorRoomActivity.class);
+                    intent.putExtra("ROOM_CODE", roomCode);
+                    intent.putExtra("ROOM_NAME", roomName);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }
+
         roomNameField = findViewById(R.id.roomNameField);
-        Button createRoomButton = findViewById(R.id.createRoomButton);
-        Button backButton = findViewById(R.id.backButton);
+        createRoomButton = findViewById(R.id.createRoomButton);
+        backButton = findViewById(R.id.backButton);
 
         createRoomButton.setOnClickListener(v -> createRoom());
         backButton.setOnClickListener(v -> finish());
-    }
-
-    private String generateRoomCode() {
-        StringBuilder code = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 6; i++) {
-            code.append(random.nextInt(10));
-        }
-        return code.toString();
     }
 
     private void createRoom() {
@@ -47,23 +59,32 @@ public class CreateRoomActivity extends AppCompatActivity {
             Toast.makeText(this, "Podaj nazwę pokoju", Toast.LENGTH_SHORT).show();
             return;
         }
-        String roomCode = generateRoomCode();
-        DatabaseReference dbRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
-                .getReference("rooms").child(roomCode);
+
+        DatabaseReference roomsRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
+                .getReference("rooms");
+        String roomCode = String.valueOf((int) (Math.random() * 900000) + 100000);
 
         Map<String, Object> roomData = new HashMap<>();
         roomData.put("name", roomName);
-        roomData.put("code", roomCode);
         roomData.put("active", true);
 
-        dbRef.setValue(roomData).addOnSuccessListener(aVoid -> {
-            Intent intent = new Intent(this, ModeratorRoomActivity.class);
-            intent.putExtra("ROOM_CODE", roomCode);
-            intent.putExtra("ROOM_NAME", roomName);
-            startActivity(intent);
-            finish();
-        }).addOnFailureListener(e ->
-                Toast.makeText(this, "Błąd tworzenia pokoju", Toast.LENGTH_SHORT).show()
-        );
+        roomsRef.child(roomCode).setValue(roomData)
+                .addOnSuccessListener(aVoid -> {
+
+                    SharedPreferences prefs = getSharedPreferences("moderator_prefs", MODE_PRIVATE);
+                    prefs.edit()
+                            .putString("ROOM_CODE", roomCode)
+                            .putString("ROOM_NAME", roomName)
+                            .apply();
+
+                    Intent intent = new Intent(this, ModeratorRoomActivity.class);
+                    intent.putExtra("ROOM_CODE", roomCode);
+                    intent.putExtra("ROOM_NAME", roomName);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Błąd tworzenia pokoju", Toast.LENGTH_SHORT).show()
+                );
     }
 }

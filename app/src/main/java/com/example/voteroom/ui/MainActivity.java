@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         Button userButton = findViewById(R.id.userButton);
 
         moderatorButton.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, CreateRoomActivity.class));
+            startActivity(new Intent(MainActivity.this, ModeratorLoginActivity.class));
         });
 
         userButton.setOnClickListener(v -> {
