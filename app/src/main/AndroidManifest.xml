@@ -1,32 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    package="com.example.voteroom">
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.VoteRoom"
-        tools:targetApi="31">
-
+        android:theme="@style/Theme.VoteRoom">
+        <activity android:name=".ui.SummaryActivity" android:exported="false"/>
+        <activity android:name=".ui.ResultsActivity" android:exported="false"/>
+        <activity android:name=".ui.SelectVoteActivity" android:exported="false"/>
+        <activity android:name=".ui.VoteActivity" android:exported="false"/>
+        <activity android:name=".ui.AddQuestionActivity" android:exported="false"/>
+        <activity android:name=".ui.ModeratorRoomActivity" android:exported="false"/>
+        <activity android:name=".ui.CreateRoomActivity" android:exported="false"/>
+        <activity android:name=".ui.JoinRoomActivity" android:exported="false"/>
         <activity android:name=".ui.MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.ModeratorLoginActivity" />
-        <activity android:name=".ui.JoinRoomActivity" />
-        <activity android:name=".ui.ModeratorRoomActivity" />
-        <activity android:name=".ui.AddQuestionActivity" />
-        <activity android:name=".ui.VoteActivity" />
-        <activity android:name=".ui.ResultsActivity" />
-        <activity android:name=".ui.SummaryActivity" />
-
     </application>
-
 </manifest>
