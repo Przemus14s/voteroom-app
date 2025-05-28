@@ -1,4 +1,4 @@
-package com.example.voteroom.ui;
+package com.example.voteroom.ui.moderator;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
+import com.example.voteroom.service.ModeratorService;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -47,19 +48,9 @@ public class ModeratorRoomActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        closeRoomButton.setOnClickListener(v -> closeRoom());
+        closeRoomButton.setOnClickListener(v -> ModeratorService.closeRoom(this, roomCode));
 
         backButton.setOnClickListener(v -> finish());
     }
 
-    private void closeRoom() {
-        DatabaseReference dbRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
-                .getReference("rooms").child(roomCode).child("active");
-        dbRef.setValue(false).addOnSuccessListener(aVoid -> {
-            Toast.makeText(this, "Pokój zamknięty", Toast.LENGTH_SHORT).show();
-            finish();
-        }).addOnFailureListener(e ->
-                Toast.makeText(this, "Błąd zamykania pokoju", Toast.LENGTH_SHORT).show()
-        );
-    }
 }

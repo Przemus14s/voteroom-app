@@ -7,6 +7,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
+import com.example.voteroom.ui.moderator.ModeratorLoginActivity;
 
 public class MainActivity extends AppCompatActivity {
     @Override

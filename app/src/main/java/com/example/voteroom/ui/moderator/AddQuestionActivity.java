@@ -1,4 +1,4 @@
-package com.example.voteroom.ui;
+package com.example.voteroom.ui.moderator;
 
 import android.os.Bundle;
 import android.widget.Button;

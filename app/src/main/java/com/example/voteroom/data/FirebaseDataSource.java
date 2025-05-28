@@ -1,14 +1,16 @@
 package com.example.voteroom.data;
 
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class FirebaseDataSource {
 
     private static FirebaseDataSource instance;
+    private final FirebaseDatabase database;
 
     public FirebaseDataSource() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/");
+        database = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/");
     }
 
     public static FirebaseDataSource getInstance() {
@@ -18,7 +20,11 @@ public class FirebaseDataSource {
         return instance;
     }
 
-    public void createRoom() {
+    public DatabaseReference getModeratorReference(String name) {
+        return database.getReference("moderators").child(name);
+    }
 
+    public DatabaseReference getRoomsReference() {
+        return database.getReference("rooms");
     }
 }

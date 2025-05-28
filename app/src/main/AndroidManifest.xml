@@ -28,16 +28,16 @@
             android:name=".ui.VoteActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.ModeratorLoginActivity"
+            android:name=".ui.moderator.ModeratorLoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.AddQuestionActivity"
+            android:name=".ui.moderator.AddQuestionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.ModeratorRoomActivity"
+            android:name=".ui.moderator.ModeratorRoomActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.CreateRoomActivity"
+            android:name=".ui.moderator.CreateRoomActivity"
             android:exported="false" />
         <activity
             android:name=".ui.JoinRoomActivity"
