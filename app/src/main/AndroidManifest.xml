@@ -40,6 +40,9 @@
             android:name=".ui.moderator.CreateRoomActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.moderator.PreviewVoteActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.JoinRoomActivity"
             android:exported="false" />
         <activity
@@ -52,4 +55,3 @@
         </activity>
     </application>
 </manifest>
-

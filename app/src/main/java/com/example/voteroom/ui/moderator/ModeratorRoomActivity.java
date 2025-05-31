@@ -10,14 +10,28 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.voteroom.R;
 import com.example.voteroom.service.ModeratorService;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModeratorRoomActivity extends AppCompatActivity {
     private String roomCode;
     private String roomName;
+
+    private QuestionAdapter questionAdapter;
+    private List<QuestionItem> questionList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +59,37 @@ public class ModeratorRoomActivity extends AppCompatActivity {
             ClipData clip = ClipData.newPlainText("Kod pokoju", roomCode);
             clipboard.setPrimaryClip(clip);
             Toast.makeText(this, "Kod skopiowany do schowka", Toast.LENGTH_SHORT).show();
+        });
+
+        RecyclerView questionsRecyclerView = findViewById(R.id.questionsRecyclerView);
+        questionAdapter = new QuestionAdapter(questionList, question -> {
+            Intent intent = new Intent(this, PreviewVoteActivity.class);
+            intent.putExtra("ROOM_CODE", roomCode);
+            intent.putExtra("QUESTION_ID", question.id);
+            startActivity(intent);
+        });
+        questionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        questionsRecyclerView.setAdapter(questionAdapter);
+
+        DatabaseReference questionsRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
+                .getReference("rooms").child(roomCode).child("questions");
+
+        questionsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                questionList.clear();
+                for (DataSnapshot questionSnap : snapshot.getChildren()) {
+                    String id = questionSnap.getKey();
+                    String title = questionSnap.child("title").getValue(String.class);
+                    if (id != null && title != null) questionList.add(new QuestionItem(id, title));
+                }
+                questionAdapter.setQuestions(questionList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ModeratorRoomActivity.this, "Błąd pobierania pytań", Toast.LENGTH_SHORT).show();
+            }
         });
 
         Button addQuestionButton = findViewById(R.id.addQuestionButton);
