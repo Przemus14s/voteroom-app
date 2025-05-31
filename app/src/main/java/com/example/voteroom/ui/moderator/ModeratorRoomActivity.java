@@ -5,13 +5,15 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.ImageView;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
 import com.example.voteroom.service.ModeratorService;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class ModeratorRoomActivity extends AppCompatActivity {
     private String roomCode;
@@ -33,9 +35,17 @@ public class ModeratorRoomActivity extends AppCompatActivity {
 
         TextView roomTitleText = findViewById(R.id.roomTitleText);
         TextView roomCodeText = findViewById(R.id.roomCodeText);
+        ImageView copyCodeIcon = findViewById(R.id.copyCodeIcon);
 
         roomTitleText.setText("Pokój: " + roomName);
         roomCodeText.setText("Kod: " + roomCode);
+
+        copyCodeIcon.setOnClickListener(v -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Kod pokoju", roomCode);
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(this, "Kod skopiowany do schowka", Toast.LENGTH_SHORT).show();
+        });
 
         Button addQuestionButton = findViewById(R.id.addQuestionButton);
         Button closeRoomButton = findViewById(R.id.closeRoomButton);
@@ -52,5 +62,4 @@ public class ModeratorRoomActivity extends AppCompatActivity {
 
         backButton.setOnClickListener(v -> finish());
     }
-
 }
