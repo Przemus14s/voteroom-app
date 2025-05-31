@@ -1,8 +1,12 @@
 package com.example.voteroom.ui.moderator;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.voteroom.R;
 import com.google.firebase.database.*;
 
@@ -17,6 +21,8 @@ public class PreviewVoteActivity extends AppCompatActivity {
 
         TextView questionTitle = findViewById(R.id.questionTitle);
         TextView optionsText = findViewById(R.id.optionsText);
+        Button editButton = findViewById(R.id.editButton);
+        Button backButton = findViewById(R.id.backButton);
 
         DatabaseReference ref = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
                 .getReference("rooms").child(roomCode).child("questions").child(questionId);
@@ -33,8 +39,17 @@ public class PreviewVoteActivity extends AppCompatActivity {
                 }
                 optionsText.setText(sb.toString());
             }
+
             @Override
-            public void onCancelled(DatabaseError error) {}
+            public void onCancelled(DatabaseError error) {
+            }
+        });
+
+        editButton.setOnClickListener(v -> {
+            Intent intent = new Intent(PreviewVoteActivity.this, EditQuestionActivity.class);
+            intent.putExtra("ROOM_CODE", roomCode);
+            intent.putExtra("QUESTION_ID", questionId);
+            startActivity(intent);
         });
     }
 }
