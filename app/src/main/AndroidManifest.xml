@@ -17,6 +17,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VoteRoom">
         <activity
+            android:name=".ui.moderator.ModeratorVotingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.user.VotingNotStartedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.moderator.ModeratorResultsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.moderator.EditQuestionActivity"
             android:exported="false" />
         <activity
@@ -26,10 +35,10 @@
             android:name=".ui.ResultsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.SelectVoteActivity"
+            android:name=".ui.user.SelectVoteActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.VoteActivity"
+            android:name=".ui.user.VoteActivity"
             android:exported="false" />
         <activity
             android:name=".ui.moderator.ModeratorLoginActivity"
@@ -47,7 +56,7 @@
             android:name=".ui.moderator.PreviewVoteActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.JoinRoomActivity"
+            android:name=".ui.user.JoinRoomActivity"
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"

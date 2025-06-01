@@ -1,4 +1,4 @@
-package com.example.voteroom.ui;
+package com.example.voteroom.ui.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.voteroom.R;
+import com.example.voteroom.ui.QuestionTileAdapter;
+import com.example.voteroom.ui.SummaryActivity;
 import com.example.voteroom.ui.moderator.ModeratorRoomActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -98,6 +100,10 @@ public class SelectVoteActivity extends AppCompatActivity {
                 Boolean isActive = snapshot.getValue(Boolean.class);
                 if (isActive != null && !isActive) {
                     Toast.makeText(SelectVoteActivity.this, "Pokój został zamknięty", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SelectVoteActivity.this, SummaryActivity.class);
+                    intent.putExtra("ROOM_CODE", roomCode);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
                     finish();
                 }
             }

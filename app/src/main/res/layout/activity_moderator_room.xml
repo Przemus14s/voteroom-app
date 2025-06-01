@@ -82,10 +82,10 @@
             android:background="@drawable/rounded_button_green" />
 
         <Button
-            android:id="@+id/closeRoomButton"
+            android:id="@+id/startVotingButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Zamknij Pokój"
+            android:text="Rozpocznij Głosowanie"
             android:textAllCaps="false"
             android:textSize="16sp"
             android:backgroundTint="#F44336"

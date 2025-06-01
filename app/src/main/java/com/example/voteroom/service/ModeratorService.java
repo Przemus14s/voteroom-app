@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.example.voteroom.data.FirebaseDataSource;
 import com.example.voteroom.ui.moderator.CreateRoomActivity;
 import com.example.voteroom.ui.moderator.ModeratorRoomActivity;
+import com.example.voteroom.ui.moderator.ModeratorVotingActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -41,9 +42,7 @@ public class ModeratorService {
                     Toast.makeText(context, "Błędne hasło", Toast.LENGTH_SHORT).show();
                 }
             }
-        }).addOnFailureListener(e ->
-                Toast.makeText(context, "Błąd połączenia z bazą", Toast.LENGTH_SHORT).show()
-        );
+        }).addOnFailureListener(e -> Toast.makeText(context, "Błąd połączenia z bazą", Toast.LENGTH_SHORT).show());
     }
 
     public static void register(Context context, String name, String password) {
@@ -64,9 +63,7 @@ public class ModeratorService {
                     Toast.makeText(context, "Zarejestrowano moderatora", Toast.LENGTH_SHORT).show();
                 });
             }
-        }).addOnFailureListener(e ->
-                Toast.makeText(context, "Błąd połączenia z bazą", Toast.LENGTH_SHORT).show()
-        );
+        }).addOnFailureListener(e -> Toast.makeText(context, "Błąd połączenia z bazą", Toast.LENGTH_SHORT).show());
     }
 
     public static void createRoom(Context context, String name) {
@@ -80,28 +77,36 @@ public class ModeratorService {
 
         Map<String, Object> roomData = new HashMap<>();
         roomData.put("name", name);
-        roomData.put("active", true);
+        roomData.put("active", false);
 
-        roomsRef.child(roomCode).setValue(roomData)
-                .addOnSuccessListener(aVoid -> {
+        roomsRef.child(roomCode).setValue(roomData).addOnSuccessListener(aVoid -> {
 
-                    SharedPreferences prefs = context.getSharedPreferences("moderator_prefs", Context.MODE_PRIVATE);
-                    prefs.edit()
-                            .putString("ROOM_CODE", roomCode)
-                            .putString("ROOM_NAME", name)
-                            .apply();
+            SharedPreferences prefs = context.getSharedPreferences("moderator_prefs", Context.MODE_PRIVATE);
+            prefs.edit().putString("ROOM_CODE", roomCode).putString("ROOM_NAME", name).apply();
 
-                    Intent intent = new Intent(context, ModeratorRoomActivity.class);
-                    intent.putExtra("ROOM_CODE", roomCode);
-                    intent.putExtra("ROOM_NAME", name);
-                    context.startActivity(intent);
-                    if (context instanceof android.app.Activity) {
-                        ((android.app.Activity) context).finish();
-                    }
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(context, "Błąd tworzenia pokoju", Toast.LENGTH_SHORT).show()
-                );
+            Intent intent = new Intent(context, ModeratorRoomActivity.class);
+            intent.putExtra("ROOM_CODE", roomCode);
+            intent.putExtra("ROOM_NAME", name);
+            context.startActivity(intent);
+            if (context instanceof android.app.Activity) {
+                ((android.app.Activity) context).finish();
+            }
+        }).addOnFailureListener(e -> Toast.makeText(context, "Błąd tworzenia pokoju", Toast.LENGTH_SHORT).show());
+    }
+
+    public static void startVoting(Context context, String roomCode) {
+        DatabaseReference roomRef = firebaseDataSource.getRoomsReference().child(roomCode);
+
+        roomRef.child("questions").get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists() && snapshot.getChildrenCount() > 0) {
+                roomRef.child("active").setValue(true).addOnSuccessListener(aVoid -> Toast.makeText(context, "Głosowanie rozpoczęte", Toast.LENGTH_SHORT).show()
+
+
+                ).addOnFailureListener(e -> Toast.makeText(context, "Błąd przy rozpoczynaniu głosowania", Toast.LENGTH_SHORT).show());
+            } else {
+                Toast.makeText(context, "Dodaj przynajmniej jedno pytanie przed rozpoczęciem głosowania", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> Toast.makeText(context, "Błąd połączenia z bazą", Toast.LENGTH_SHORT).show());
     }
 
     public static void closeRoom(Context context, String code) {
@@ -113,8 +118,6 @@ public class ModeratorService {
                 ((android.app.Activity) context).finish();
             }
 
-        }).addOnFailureListener(e ->
-                Toast.makeText(context, "Błąd zamykania pokoju", Toast.LENGTH_SHORT).show()
-        );
+        }).addOnFailureListener(e -> Toast.makeText(context, "Błąd zamykania pokoju", Toast.LENGTH_SHORT).show());
     }
 }
