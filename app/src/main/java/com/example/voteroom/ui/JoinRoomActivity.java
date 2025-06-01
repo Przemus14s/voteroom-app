@@ -9,8 +9,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -45,24 +43,18 @@ public class JoinRoomActivity extends AppCompatActivity {
         roomRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
                 .getReference("rooms").child(roomCode);
 
-        roomRef.get().addOnSuccessListener(snapshot -> {
-            if (!snapshot.exists()) {
-                Toast.makeText(this, "Nie znaleziono pokoju", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Boolean isActive = snapshot.child("active").getValue(Boolean.class);
-            if (isActive == null || !isActive) {
-
+        // Nowa logika: sprawdzamy tylko pole "active"
+        roomRef.child("active").get().addOnSuccessListener(snapshot -> {
+            Boolean isActive = snapshot.getValue(Boolean.class);
+            if (isActive != null && isActive) {
+                Intent intent = new Intent(this, SelectVoteActivity.class);
+                intent.putExtra("ROOM_CODE", roomCode);
+                startActivity(intent);
+            } else {
                 Intent intent = new Intent(this, SummaryActivity.class);
                 intent.putExtra("ROOM_CODE", roomCode);
                 startActivity(intent);
-                finish();
-                return;
             }
-            listenForRoomActive();
-            Intent intent = new Intent(this, SelectVoteActivity.class);
-            intent.putExtra("ROOM_CODE", roomCode);
-            startActivity(intent);
             finish();
         }).addOnFailureListener(e ->
                 Toast.makeText(this, "Błąd połączenia z bazą", Toast.LENGTH_SHORT).show()
@@ -73,7 +65,7 @@ public class JoinRoomActivity extends AppCompatActivity {
         if (roomRef == null) return;
         activeListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(com.google.firebase.database.DataSnapshot snapshot) {
                 Boolean isActive = snapshot.getValue(Boolean.class);
                 if (isActive != null && !isActive) {
                     Intent intent = new Intent(JoinRoomActivity.this, SummaryActivity.class);
@@ -84,7 +76,7 @@ public class JoinRoomActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(com.google.firebase.database.DatabaseError error) {
             }
         };
         roomRef.child("active").addValueEventListener(activeListener);
