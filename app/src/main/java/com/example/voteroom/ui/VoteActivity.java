@@ -28,6 +28,16 @@ public class VoteActivity extends AppCompatActivity {
         roomCode = getIntent().getStringExtra("ROOM_CODE");
         questionId = getIntent().getStringExtra("QUESTION_ID");
 
+        if (hasVoted(roomCode, questionId)) {
+            Toast.makeText(this, "Już głosowałeś na to pytanie", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(VoteActivity.this, ResultsActivity.class);
+            intent.putExtra("ROOM_CODE", roomCode);
+            intent.putExtra("QUESTION_ID", questionId);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         TextView questionText = findViewById(R.id.questionText);
         RadioGroup optionsRadioGroup = findViewById(R.id.optionsRadioGroup);
         RadioButton option1 = findViewById(R.id.option1);
@@ -72,6 +82,7 @@ public class VoteActivity extends AppCompatActivity {
 
         Button voteButton = findViewById(R.id.voteButton);
         voteButton.setOnClickListener(v -> {
+
             int checkedId = optionsRadioGroup.getCheckedRadioButtonId();
             if (checkedId == -1) {
                 Toast.makeText(this, "Wybierz opcję", Toast.LENGTH_SHORT).show();
@@ -88,6 +99,8 @@ public class VoteActivity extends AppCompatActivity {
                 Toast.makeText(this, "Błąd głosowania", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            setVoted(roomCode, questionId);
 
             DatabaseReference voteRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
                     .getReference("rooms").child(roomCode).child("questions").child(questionId).child("votes").child(selectedOption);
@@ -114,5 +127,15 @@ public class VoteActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+
+    private boolean hasVoted(String roomCode, String questionId) {
+        String key = "voted_" + roomCode + "_" + questionId;
+        return getSharedPreferences("votes", MODE_PRIVATE).getBoolean(key, false);
+    }
+
+    private void setVoted(String roomCode, String questionId) {
+        String key = "voted_" + roomCode + "_" + questionId;
+        getSharedPreferences("votes", MODE_PRIVATE).edit().putBoolean(key, true).apply();
     }
 }
