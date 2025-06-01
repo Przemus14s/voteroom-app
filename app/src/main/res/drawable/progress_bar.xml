@@ -1,0 +1,8 @@
+<!-- res/drawable/progress_bar.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="ring"
+    android:thicknessRatio="8"
+    android:useLevel="false"
+    android:innerRadiusRatio="3">
+    <size android:width="48dp" android:height="48dp"/>
+    <solid android:color="#22306D"/>
+</shape>

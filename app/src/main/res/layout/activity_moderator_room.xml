@@ -5,16 +5,16 @@
     android:id="@+id/moderatorRoomLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#181A20"
-    android:padding="16dp">
+    android:background="@drawable/tlo_android"
+    android:padding="24dp">
 
     <TextView
         android:id="@+id/roomTitleText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Pokój: Wycieczka szkolna"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:textColor="#22306D"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Kod: 394817"
-            android:textColor="#BBBBBB"
+            android:textColor="#22306D"
             android:textSize="16sp"
             android:layout_gravity="center_vertical"/>
 
@@ -46,9 +46,10 @@
             android:src="@drawable/ic_copy"
             android:contentDescription="Kopiuj kod"
             android:layout_marginStart="8dp"
-            app:tint="#BBBBBB"
+            app:tint="#22306D"
             android:layout_gravity="center_vertical"/>
     </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/questionsRecyclerView"
         android:layout_width="0dp"
@@ -60,6 +61,7 @@
         app:layout_constraintBottom_toTopOf="@id/buttonsLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
     <LinearLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="0dp"
@@ -69,39 +71,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/addQuestionButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Dodaj Pytanie"
             android:textAllCaps="false"
-            android:textSize="16sp"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rounded_button_green" />
+            android:textSize="18sp"
+            android:textColor="#22306D"
+            app:backgroundTint="#E3EAF4"
+            android:elevation="4dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            app:cornerRadius="0dp"
+            app:rippleColor="#332A5DDE"
+            android:layout_marginBottom="8dp"/>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/closeRoomButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Zamknij Pokój"
             android:textAllCaps="false"
-            android:textSize="16sp"
-            android:backgroundTint="#F44336"
+            android:textSize="18sp"
             android:textColor="#FFFFFF"
-            android:background="@drawable/rounded_button_red" />
+            app:backgroundTint="#F44336"
+            android:elevation="4dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            app:cornerRadius="0dp"
+            app:rippleColor="#332A5DDE"/>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/backButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="⬅ Wróć"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="#22306D"
             android:textSize="18sp"
-            android:background="@drawable/rounded_button_grey"
+            app:backgroundTint="#E3EAF4"
             android:elevation="4dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            app:cornerRadius="0dp"
+            app:rippleColor="#332A5DDE"
             android:layout_marginTop="12dp"/>
     </LinearLayout>
 
