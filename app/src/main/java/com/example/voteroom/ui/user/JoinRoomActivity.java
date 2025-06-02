@@ -1,4 +1,4 @@
-package com.example.voteroom.ui;
+package com.example.voteroom.ui.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
+import com.example.voteroom.ui.SummaryActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -51,7 +52,7 @@ public class JoinRoomActivity extends AppCompatActivity {
                 intent.putExtra("ROOM_CODE", roomCode);
                 startActivity(intent);
             } else {
-                Intent intent = new Intent(this, SummaryActivity.class);
+                Intent intent = new Intent(this, VotingNotStartedActivity.class);
                 intent.putExtra("ROOM_CODE", roomCode);
                 startActivity(intent);
             }

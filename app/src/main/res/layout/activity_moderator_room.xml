@@ -88,12 +88,11 @@
             app:rippleColor="#332A5DDE"
             android:layout_marginBottom="8dp"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/closeRoomButton"
-            style="@style/Widget.MaterialComponents.Button"
+        <Button
+            android:id="@+id/startVotingButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Zamknij Pokój"
+            android:text="Rozpocznij Głosowanie"
             android:textAllCaps="false"
             android:textSize="18sp"
             android:textColor="#FFFFFF"

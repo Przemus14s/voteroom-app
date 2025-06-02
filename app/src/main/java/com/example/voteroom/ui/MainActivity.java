@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
 import com.example.voteroom.ui.moderator.ModeratorLoginActivity;
+import com.example.voteroom.ui.user.JoinRoomActivity;
 
 public class MainActivity extends AppCompatActivity {
     @Override

@@ -29,6 +29,8 @@ import java.util.List;
 public class ModeratorRoomActivity extends AppCompatActivity {
     private String roomCode;
     private String roomName;
+    private DatabaseReference roomRef;
+    private ValueEventListener activeListener;
 
     private QuestionAdapter questionAdapter;
     private List<QuestionItem> questionList = new ArrayList<>();
@@ -40,6 +42,9 @@ public class ModeratorRoomActivity extends AppCompatActivity {
 
         roomCode = getIntent().getStringExtra("ROOM_CODE");
         roomName = getIntent().getStringExtra("ROOM_NAME");
+
+        roomRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
+                .getReference("rooms").child(roomCode);
 
         if (roomCode == null || roomName == null) {
             Toast.makeText(this, "Brak danych pokoju", Toast.LENGTH_SHORT).show();
@@ -93,7 +98,7 @@ public class ModeratorRoomActivity extends AppCompatActivity {
         });
 
         Button addQuestionButton = findViewById(R.id.addQuestionButton);
-        Button closeRoomButton = findViewById(R.id.closeRoomButton);
+        Button startVotingButton = findViewById(R.id.startVotingButton);
         Button backButton = findViewById(R.id.backButton);
 
         addQuestionButton.setOnClickListener(v -> {
@@ -103,8 +108,32 @@ public class ModeratorRoomActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        closeRoomButton.setOnClickListener(v -> ModeratorService.closeRoom(this, roomCode));
+        startVotingButton.setOnClickListener(v -> ModeratorService.startVoting(this, roomCode));
 
         backButton.setOnClickListener(v -> finish());
+
+        activeListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Boolean isActive = snapshot.getValue(Boolean.class);
+                if (isActive != null && isActive) {
+                    Intent intent = new Intent(ModeratorRoomActivity.this, ModeratorVotingActivity.class);
+                    intent.putExtra("ROOM_CODE", roomCode);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        };
+        roomRef.child("active").addValueEventListener(activeListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (roomRef != null && activeListener != null) {
+            roomRef.child("active").removeEventListener(activeListener);
+        }
     }
 }

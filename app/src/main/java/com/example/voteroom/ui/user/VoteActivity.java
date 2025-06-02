@@ -1,4 +1,4 @@
-package com.example.voteroom.ui;
+package com.example.voteroom.ui.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,14 +11,18 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
+import com.example.voteroom.ui.ResultsActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class VoteActivity extends AppCompatActivity {
     private String roomCode;
     private String questionId;
+    private DatabaseReference roomRef;
+    private ValueEventListener activeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +76,7 @@ public class VoteActivity extends AppCompatActivity {
 
         Button voteButton = findViewById(R.id.voteButton);
         voteButton.setOnClickListener(v -> {
+
             int checkedId = optionsRadioGroup.getCheckedRadioButtonId();
             if (checkedId == -1) {
                 Toast.makeText(this, "Wybierz opcję", Toast.LENGTH_SHORT).show();
@@ -88,6 +93,8 @@ public class VoteActivity extends AppCompatActivity {
                 Toast.makeText(this, "Błąd głosowania", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            setVoted(roomCode, questionId);
 
             DatabaseReference voteRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
                     .getReference("rooms").child(roomCode).child("questions").child(questionId).child("votes").child(selectedOption);
@@ -106,13 +113,49 @@ public class VoteActivity extends AppCompatActivity {
 
                 @Override
                 public void onComplete(DatabaseError error, boolean committed, DataSnapshot currentData) {
+                    Toast.makeText(VoteActivity.this, "Głos oddany!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(VoteActivity.this, SelectVoteActivity.class);
+                    intent.putExtra("ROOM_CODE", roomCode);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        });
+    }
+
+    private void listenForRoomClosed() {
+        roomRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
+                .getReference("rooms").child(roomCode);
+        activeListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Boolean isActive = snapshot.child("active").getValue(Boolean.class);
+                if (isActive != null && !isActive) {
                     Intent intent = new Intent(VoteActivity.this, ResultsActivity.class);
                     intent.putExtra("ROOM_CODE", roomCode);
                     intent.putExtra("QUESTION_ID", questionId);
                     startActivity(intent);
                     finish();
                 }
-            });
-        });
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {}
+        };
+        roomRef.addValueEventListener(activeListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (roomRef != null && activeListener != null) {
+            roomRef.removeEventListener(activeListener);
+        }
+    }
+
+
+    private void setVoted(String roomCode, String questionId) {
+        String key = "voted_" + roomCode + "_" + questionId;
+        getSharedPreferences("votes", MODE_PRIVATE).edit().putBoolean(key, true).apply();
     }
 }
