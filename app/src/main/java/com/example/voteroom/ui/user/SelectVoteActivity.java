@@ -2,7 +2,7 @@ package com.example.voteroom.ui.user;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.voteroom.R;
 import com.example.voteroom.ui.QuestionTileAdapter;
-import com.example.voteroom.ui.ResultsActivity;
 import com.example.voteroom.ui.SummaryActivity;
-import com.example.voteroom.ui.moderator.ModeratorRoomActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +38,14 @@ public class SelectVoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_vote);
 
         roomCode = getIntent().getStringExtra("ROOM_CODE");
+        Log.d("SelectVoteActivity", "Odebrany ROOM_CODE: " + roomCode);
+
+        if (roomCode == null || roomCode.isEmpty()) {
+            Toast.makeText(this, "Brak kodu pokoju!", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         recyclerView = findViewById(R.id.questionsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new QuestionTileAdapter(questions, (questionId, title) -> {
@@ -74,6 +80,7 @@ public class SelectVoteActivity extends AppCompatActivity {
                 for (DataSnapshot qSnap : snapshot.getChildren()) {
                     String id = qSnap.getKey();
                     String title = qSnap.child("title").getValue(String.class);
+
                     if (id != null && title != null) {
                         questions.add(new QuestionTileAdapter.QuestionItem(id, title));
                     }
@@ -81,11 +88,14 @@ public class SelectVoteActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 if (questions.isEmpty()) {
                     Toast.makeText(SelectVoteActivity.this, "Brak głosowań w tym pokoju", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SelectVoteActivity.this, "Liczba pytań: " + questions.size(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
+
                 Toast.makeText(SelectVoteActivity.this, "Błąd pobierania pytań", Toast.LENGTH_SHORT).show();
             }
         };
@@ -97,6 +107,7 @@ public class SelectVoteActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Boolean isActive = snapshot.getValue(Boolean.class);
+
                 if (isActive != null && !isActive) {
                     Toast.makeText(SelectVoteActivity.this, "Pokój został zamknięty", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SelectVoteActivity.this, SummaryActivity.class);
@@ -109,9 +120,7 @@ public class SelectVoteActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
-
         };
         roomRef.child("active").addValueEventListener(activeListener);
     }
