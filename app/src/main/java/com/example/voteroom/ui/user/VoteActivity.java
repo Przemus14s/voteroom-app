@@ -32,12 +32,6 @@ public class VoteActivity extends AppCompatActivity {
         roomCode = getIntent().getStringExtra("ROOM_CODE");
         questionId = getIntent().getStringExtra("QUESTION_ID");
 
-        if (hasVoted(roomCode, questionId)) {
-            Toast.makeText(this, "Już głosowałeś na to pytanie. Czekaj na zamknięcie pokoju.", Toast.LENGTH_SHORT).show();
-            listenForRoomClosed();
-            return;
-        }
-
         TextView questionText = findViewById(R.id.questionText);
         RadioGroup optionsRadioGroup = findViewById(R.id.optionsRadioGroup);
         RadioButton option1 = findViewById(R.id.option1);
@@ -159,10 +153,6 @@ public class VoteActivity extends AppCompatActivity {
         }
     }
 
-    private boolean hasVoted(String roomCode, String questionId) {
-        String key = "voted_" + roomCode + "_" + questionId;
-        return getSharedPreferences("votes", MODE_PRIVATE).getBoolean(key, false);
-    }
 
     private void setVoted(String roomCode, String questionId) {
         String key = "voted_" + roomCode + "_" + questionId;

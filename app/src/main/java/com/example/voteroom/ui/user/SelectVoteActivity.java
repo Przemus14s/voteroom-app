@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.voteroom.R;
 import com.example.voteroom.ui.QuestionTileAdapter;
+import com.example.voteroom.ui.ResultsActivity;
 import com.example.voteroom.ui.SummaryActivity;
 import com.example.voteroom.ui.moderator.ModeratorRoomActivity;
 import com.google.firebase.database.DataSnapshot;
@@ -42,20 +43,18 @@ public class SelectVoteActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.questionsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new QuestionTileAdapter(questions, (questionId, title) -> {
+            String key = "voted_" + roomCode + "_" + questionId;
+            boolean hasVoted = getSharedPreferences("votes", MODE_PRIVATE).getBoolean(key, false);
+            if (hasVoted) {
+                Toast.makeText(this, "Już głosowałeś na to pytanie. Czekaj na zamknięcie pokoju.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(this, VoteActivity.class);
             intent.putExtra("ROOM_CODE", roomCode);
             intent.putExtra("QUESTION_ID", questionId);
             startActivity(intent);
         });
         recyclerView.setAdapter(adapter);
-
-        Button moderatorPanelButton = findViewById(R.id.moderatorPanelButton);
-        moderatorPanelButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ModeratorRoomActivity.class);
-            intent.putExtra("ROOM_CODE", roomCode);
-            intent.putExtra("ROOM_NAME", "");
-            startActivity(intent);
-        });
 
         roomRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
                 .getReference("rooms").child(roomCode);

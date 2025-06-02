@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
+import com.example.voteroom.ui.ResultsActivity;
+import com.example.voteroom.ui.SummaryActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,7 +47,7 @@ public class ModeratorVotingActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Boolean isActive = snapshot.getValue(Boolean.class);
                 if (isActive != null && !isActive) {
-                    Intent intent = new Intent(ModeratorVotingActivity.this, ModeratorResultsActivity.class);
+                    Intent intent = new Intent(ModeratorVotingActivity.this, SummaryActivity.class);
                     intent.putExtra("ROOM_CODE", roomCode);
                     startActivity(intent);
                     finish();
