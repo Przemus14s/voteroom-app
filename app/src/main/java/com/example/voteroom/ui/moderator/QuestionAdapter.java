@@ -8,18 +8,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.voteroom.R;
 import java.util.List;
+import java.util.Map;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.QuestionViewHolder> {
     private List<QuestionItem> questions;
+    private Map<String, String> optionsMap;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(QuestionItem question);
     }
 
-    public QuestionAdapter(List<QuestionItem> questions, OnItemClickListener listener) {
+
+    public QuestionAdapter(List<QuestionItem> questions, Map<String, String> optionsMap, OnItemClickListener listener) {
         this.questions = questions;
+        this.optionsMap = optionsMap;
         this.listener = listener;
+    }
+
+
+    public QuestionAdapter(List<QuestionItem> questions, OnItemClickListener listener) {
+        this(questions, null, listener);
     }
 
     @NonNull
@@ -34,12 +43,24 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
     public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {
         QuestionItem question = questions.get(position);
         holder.questionTitle.setText(question.title);
-        holder.itemView.setOnClickListener(v -> listener.onItemClick(question));
+
+        String options = (optionsMap != null) ? optionsMap.get(question.id) : null;
+        if (options != null && !options.isEmpty()) {
+            holder.questionSubtitle.setText("Opcje: " + options);
+            holder.questionSubtitle.setVisibility(View.VISIBLE);
+        } else {
+            holder.questionSubtitle.setText("");
+            holder.questionSubtitle.setVisibility(View.GONE);
+        }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) listener.onItemClick(question);
+        });
     }
 
     @Override
     public int getItemCount() {
-        return questions != null ? questions.size() : 0;
+        return (questions != null) ? questions.size() : 0;
     }
 
     public void setQuestions(List<QuestionItem> questions) {
@@ -48,10 +69,11 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
     }
 
     static class QuestionViewHolder extends RecyclerView.ViewHolder {
-        TextView questionTitle;
+        TextView questionTitle, questionSubtitle;
         QuestionViewHolder(View itemView) {
             super(itemView);
             questionTitle = itemView.findViewById(R.id.questionTitle);
+            questionSubtitle = itemView.findViewById(R.id.questionSubtitle);
         }
     }
 }
