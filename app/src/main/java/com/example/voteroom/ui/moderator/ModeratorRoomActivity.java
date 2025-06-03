@@ -24,9 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ModeratorRoomActivity extends AppCompatActivity {
     private String roomCode;
@@ -36,7 +34,6 @@ public class ModeratorRoomActivity extends AppCompatActivity {
 
     private QuestionAdapter questionAdapter;
     private List<QuestionItem> questionList = new ArrayList<>();
-    private Map<String, String> optionsMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +67,7 @@ public class ModeratorRoomActivity extends AppCompatActivity {
         });
 
         RecyclerView questionsRecyclerView = findViewById(R.id.questionsRecyclerView);
-        questionAdapter = new QuestionAdapter(questionList, optionsMap, question -> {
+        questionAdapter = new QuestionAdapter(questionList, question -> {
             Intent intent = new Intent(this, PreviewVoteActivity.class);
             intent.putExtra("ROOM_CODE", roomCode);
             intent.putExtra("QUESTION_ID", question.id);
@@ -86,21 +83,19 @@ public class ModeratorRoomActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 questionList.clear();
-                optionsMap.clear();
                 for (DataSnapshot questionSnap : snapshot.getChildren()) {
                     String id = questionSnap.getKey();
                     String title = questionSnap.child("title").getValue(String.class);
-                    if (id != null && title != null) {
-                        questionList.add(new QuestionItem(id, title));
 
-                        DataSnapshot optionsSnap = questionSnap.child("options");
-                        StringBuilder sb = new StringBuilder();
-                        for (DataSnapshot opt : optionsSnap.getChildren()) {
-                            String optVal = opt.getValue(String.class);
-                            if (optVal != null) sb.append(optVal).append(", ");
-                        }
-                        if (sb.length() > 2) sb.setLength(sb.length() - 2);
-                        optionsMap.put(id, sb.toString());
+                    List<String> options = new ArrayList<>();
+                    DataSnapshot optionsSnap = questionSnap.child("options");
+                    for (DataSnapshot opt : optionsSnap.getChildren()) {
+                        String optVal = opt.getValue(String.class);
+                        if (optVal != null) options.add(optVal);
+                    }
+
+                    if (id != null && title != null) {
+                        questionList.add(new QuestionItem(id, title, options));
                     }
                 }
                 questionAdapter.setQuestions(questionList);

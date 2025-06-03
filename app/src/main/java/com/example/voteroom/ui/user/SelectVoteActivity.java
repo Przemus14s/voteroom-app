@@ -81,8 +81,16 @@ public class SelectVoteActivity extends AppCompatActivity {
                     String id = qSnap.getKey();
                     String title = qSnap.child("title").getValue(String.class);
 
+                    // Pobierz opcje, jeśli są w bazie
+                    List<String> options = new ArrayList<>();
+                    DataSnapshot optionsSnap = qSnap.child("options");
+                    for (DataSnapshot opt : optionsSnap.getChildren()) {
+                        String optVal = opt.getValue(String.class);
+                        if (optVal != null) options.add(optVal);
+                    }
+
                     if (id != null && title != null) {
-                        questions.add(new QuestionTileAdapter.QuestionItem(id, title));
+                        questions.add(new QuestionTileAdapter.QuestionItem(id, title, options));
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -95,7 +103,6 @@ public class SelectVoteActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError error) {
-
                 Toast.makeText(SelectVoteActivity.this, "Błąd pobierania pytań", Toast.LENGTH_SHORT).show();
             }
         };

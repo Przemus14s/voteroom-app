@@ -1,5 +1,6 @@
 package com.example.voteroom.ui;
 
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,13 @@ public class QuestionTileAdapter extends RecyclerView.Adapter<QuestionTileAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         QuestionItem item = questions.get(position);
         holder.title.setText(item.title);
+        if (item.options != null && !item.options.isEmpty()) {
+            holder.options.setText("Opcje: " + String.join(", ", item.options));
+            holder.options.setVisibility(View.VISIBLE);
+        } else {
+            holder.options.setText("");
+            holder.options.setVisibility(View.GONE);
+        }
         holder.itemView.setOnClickListener(v -> listener.onItemClick(item.id, item.title));
     }
 
@@ -46,21 +54,24 @@ public class QuestionTileAdapter extends RecyclerView.Adapter<QuestionTileAdapte
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
+        TextView title, options;
 
         ViewHolder(View v) {
             super(v);
             title = v.findViewById(R.id.questionTitle);
+            options = v.findViewById(R.id.questionSubtitle);
         }
     }
 
     public static class QuestionItem {
         public String id;
         public String title;
+        public List<String> options;
 
-        public QuestionItem(String id, String title) {
+        public QuestionItem(String id, String title, List<String> options) {
             this.id = id;
             this.title = title;
+            this.options = options;
         }
     }
 }

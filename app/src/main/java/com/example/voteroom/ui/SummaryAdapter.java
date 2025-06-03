@@ -14,12 +14,14 @@ import java.util.List;
 
 public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHolder> {
     public static class SummaryItem {
+        public String questionId;
         public String questionTitle;
         public List<String> options;
         public List<Long> votes;
         public long totalVotes;
 
-        public SummaryItem(String questionTitle, List<String> options, List<Long> votes, long totalVotes) {
+        public SummaryItem(String questionId, String questionTitle, List<String> options, List<Long> votes, long totalVotes) {
+            this.questionId = questionId;
             this.questionTitle = questionTitle;
             this.options = options;
             this.votes = votes;
@@ -27,10 +29,16 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
         }
     }
 
-    private final List<SummaryItem> items;
+    public interface OnItemClickListener {
+        void onItemClick(String questionId, String questionTitle);
+    }
 
-    public SummaryAdapter(List<SummaryItem> items) {
+    private final List<SummaryItem> items;
+    private final OnItemClickListener listener;
+
+    public SummaryAdapter(List<SummaryItem> items, OnItemClickListener listener) {
         this.items = items;
+        this.listener = listener;
     }
 
     @NonNull
@@ -62,6 +70,12 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
         }
         holder.subtitle.setText(sb.toString().trim());
         holder.subtitle.setVisibility(View.VISIBLE);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(item.questionId, item.questionTitle);
+            }
+        });
     }
 
     @Override

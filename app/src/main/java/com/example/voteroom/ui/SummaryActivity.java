@@ -3,6 +3,7 @@ package com.example.voteroom.ui;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -54,7 +55,12 @@ public class SummaryActivity extends AppCompatActivity {
 
         summaryRecyclerView = findViewById(R.id.summaryRecyclerView);
         summaryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        summaryAdapter = new SummaryAdapter(summaryItems);
+        summaryAdapter = new SummaryAdapter(summaryItems, (questionId, questionTitle) -> {
+            Intent intent = new Intent(this, ResultsActivity.class);
+            intent.putExtra("ROOM_CODE", roomCode);
+            intent.putExtra("QUESTION_ID", questionId);
+            startActivity(intent);
+        });
         summaryRecyclerView.setAdapter(summaryAdapter);
 
         Button backToMainButton = findViewById(R.id.backToMainButton);
@@ -88,6 +94,7 @@ public class SummaryActivity extends AppCompatActivity {
                 return;
             }
             for (DataSnapshot qSnap : snapshot.getChildren()) {
+                String questionId = qSnap.getKey();
                 String title = qSnap.child("title").getValue(String.class);
                 List<String> options = new ArrayList<>();
                 List<Long> votes = new ArrayList<>();
@@ -111,8 +118,8 @@ public class SummaryActivity extends AppCompatActivity {
                     }
                 }
 
-                if (title != null && !options.isEmpty()) {
-                    summaryItems.add(new SummaryAdapter.SummaryItem(title, options, votes, totalVotes));
+                if (title != null && !options.isEmpty() && questionId != null) {
+                    summaryItems.add(new SummaryAdapter.SummaryItem(questionId, title, options, votes, totalVotes));
                 }
             }
             summaryAdapter.notifyDataSetChanged();
