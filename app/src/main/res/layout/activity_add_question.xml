@@ -101,43 +101,45 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/saveQuestionButton"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Zapisz Pytanie"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:textColor="#FFFFFF"
-        app:backgroundTint="#22306D"
-        android:elevation="4dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        app:cornerRadius="0dp"
-        app:rippleColor="#332A5DDE"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/option4Field"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
         android:id="@+id/backButton"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:elevation="4dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:text="⬅ Wróć"
         android:textAllCaps="false"
         android:textColor="#22306D"
         android:textSize="18sp"
         app:backgroundTint="#E3EAF4"
+        app:cornerRadius="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveQuestionButton"
+        app:rippleColor="#332A5DDE" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveQuestionButton"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="204dp"
         android:elevation="4dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
+        android:text="Zapisz Pytanie"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:backgroundTint="#22306D"
         app:cornerRadius="0dp"
-        app:rippleColor="#332A5DDE"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/saveQuestionButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/option4Field"
+        app:rippleColor="#332A5DDE" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
