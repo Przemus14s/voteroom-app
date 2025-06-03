@@ -44,15 +44,24 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         SummaryItem item = items.get(position);
+        holder.title.setText(item.questionTitle);
+
         StringBuilder sb = new StringBuilder();
-        sb.append(item.questionTitle).append("\n");
         for (int i = 0; i < item.options.size(); i++) {
             String opt = item.options.get(i);
             long count = item.votes.get(i);
             int percent = (item.totalVotes > 0) ? (int) ((count * 100) / item.totalVotes) : 0;
-            sb.append(opt).append(" – ").append(percent).append("% (").append(count).append(" głosów)\n");
+            sb.append(opt)
+                    .append(" – ")
+                    .append(percent)
+                    .append("% (")
+                    .append(count)
+                    .append(" głos")
+                    .append(count == 1 ? "" : "ów")
+                    .append(")\n");
         }
-        holder.title.setText(sb.toString().trim());
+        holder.subtitle.setText(sb.toString().trim());
+        holder.subtitle.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -61,11 +70,12 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
+        TextView title, subtitle;
 
         ViewHolder(View v) {
             super(v);
             title = v.findViewById(R.id.questionTitle);
+            subtitle = v.findViewById(R.id.questionSubtitle);
         }
     }
 }

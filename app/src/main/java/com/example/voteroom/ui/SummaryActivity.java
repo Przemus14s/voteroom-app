@@ -46,6 +46,12 @@ public class SummaryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_summary);
 
         roomCode = getIntent().getStringExtra("ROOM_CODE");
+        if (roomCode == null) {
+            Toast.makeText(this, "Brak kodu pokoju", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         summaryRecyclerView = findViewById(R.id.summaryRecyclerView);
         summaryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         summaryAdapter = new SummaryAdapter(summaryItems);
@@ -66,12 +72,6 @@ public class SummaryActivity extends AppCompatActivity {
                 generateAndSavePdf();
             }
         });
-
-        if (roomCode == null) {
-            Toast.makeText(this, "Brak kodu pokoju", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
 
         loadSummary();
     }

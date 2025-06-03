@@ -47,7 +47,18 @@ public class ResultsActivity extends AppCompatActivity {
                 .getReference("rooms").child(roomCode).child("questions").child(questionId);
 
         questionRef.get().addOnSuccessListener(snapshot -> {
-            if (!snapshot.exists()) return;
+            if (!snapshot.exists()) {
+                Toast.makeText(this, "Nie znaleziono pytania", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+
+            // Wyświetl tytuł pytania
+            TextView titleView = findViewById(R.id.resultsTitle);
+            String questionTitle = snapshot.child("title").getValue(String.class);
+            if (questionTitle != null && !questionTitle.isEmpty()) {
+                titleView.setText("Wyniki: " + questionTitle);
+            }
 
             Map<String, String> options = new HashMap<>();
             if (snapshot.child("options").exists()) {
@@ -69,12 +80,7 @@ public class ResultsActivity extends AppCompatActivity {
             for (int i = 1; i <= 4; i++) {
                 String key = String.valueOf(i);
                 String optionText = options.get(key);
-                TextView resultView = null;
-                if (i == 1) resultView = findViewById(R.id.resultOption1);
-                if (i == 2) resultView = findViewById(R.id.resultOption2);
-                if (i == 3) resultView = findViewById(R.id.resultOption3);
-                if (i == 4) resultView = findViewById(R.id.resultOption4);
-
+                TextView resultView = getResultTextView(i);
                 if (optionText != null && resultView != null) {
                     long count = votes.getOrDefault(key, 0L);
                     int percent = (totalVotes > 0) ? (int) ((count * 100) / totalVotes) : 0;
@@ -122,6 +128,19 @@ public class ResultsActivity extends AppCompatActivity {
                 barChart.clear();
                 barChart.setNoDataText("Brak danych do wyświetlenia");
             }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Błąd pobierania wyników", Toast.LENGTH_SHORT).show();
+            finish();
         });
+    }
+
+    private TextView getResultTextView(int idx) {
+        switch (idx) {
+            case 1: return findViewById(R.id.resultOption1);
+            case 2: return findViewById(R.id.resultOption2);
+            case 3: return findViewById(R.id.resultOption3);
+            case 4: return findViewById(R.id.resultOption4);
+            default: return null;
+        }
     }
 }
