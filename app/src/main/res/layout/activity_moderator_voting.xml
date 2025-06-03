@@ -5,17 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    android:background="#181A20">
+    android:background="@drawable/tlo_android">
 
-    <Button
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/votingRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/endVotingButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"/>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/endVotingButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:text="Zakończ głosowanie"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="18sp"
+        app:backgroundTint="#F44336"
+        app:cornerRadius="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="#332A5DDE"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
