@@ -7,7 +7,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
-import com.example.voteroom.ui.moderator.ModeratorLoginActivity;
+import com.example.voteroom.ui.moderator.CreateRoomActivity;
 import com.example.voteroom.ui.user.JoinRoomActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         Button userButton = findViewById(R.id.userButton);
 
         moderatorButton.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, ModeratorLoginActivity.class));
+            startActivity(new Intent(MainActivity.this, CreateRoomActivity.class));
         });
 
         userButton.setOnClickListener(v -> {
