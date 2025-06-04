@@ -12,7 +12,7 @@
         android:id="@+id/logoImage"
         android:layout_width="160dp"
         android:layout_height="120dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="32dp"
         android:contentDescription="Logo"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +44,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="44dp"
         android:layout_marginEnd="32dp"
         android:orientation="vertical"
         android:padding="32dp"
@@ -59,7 +59,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:backgroundTint="#22306D"
             android:elevation="4dp"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
@@ -67,6 +66,7 @@
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
+            app:backgroundTint="#22306D"
             app:cornerRadius="0dp"
             app:rippleColor="#332A5DDE" />
 

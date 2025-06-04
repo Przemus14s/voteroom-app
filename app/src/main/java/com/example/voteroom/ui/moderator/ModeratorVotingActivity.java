@@ -1,3 +1,4 @@
+// ModeratorVotingActivity.java
 package com.example.voteroom.ui.moderator;
 
 import android.content.Intent;
@@ -7,9 +8,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.voteroom.R;
-import com.example.voteroom.ui.ResultsActivity;
+import com.example.voteroom.ui.QuestionTileAdapter;
 import com.example.voteroom.ui.SummaryActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,10 +20,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ModeratorVotingActivity extends AppCompatActivity {
     private String roomCode;
     private DatabaseReference roomRef;
     private ValueEventListener activeListener;
+    private ValueEventListener questionsListener;
+    private QuestionTileAdapter adapter;
+    private List<QuestionTileAdapter.QuestionItem> questions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +42,50 @@ public class ModeratorVotingActivity extends AppCompatActivity {
 
         Button endVotingButton = findViewById(R.id.endVotingButton);
 
+        RecyclerView votingRecyclerView = findViewById(R.id.votingRecyclerView);
+        adapter = new QuestionTileAdapter(questions, (questionId, title) -> {
+            // Brak akcji po kliknięciu w trybie moderatora
+        });
+        votingRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        votingRecyclerView.setAdapter(adapter);
+
+        DatabaseReference questionsRef = roomRef.child("questions");
+        questionsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                questions.clear();
+                for (DataSnapshot qSnap : snapshot.getChildren()) {
+                    String id = qSnap.getKey();
+                    String title = qSnap.child("title").getValue(String.class);
+                    List<String> options = new ArrayList<>();
+                    DataSnapshot optionsSnap = qSnap.child("options");
+                    DataSnapshot votesSnap = qSnap.child("votes");
+                    long totalVotes = 0;
+                    for (DataSnapshot opt : optionsSnap.getChildren()) {
+                        String optVal = opt.getValue(String.class);
+                        String key = opt.getKey();
+                        long votes = 0;
+                        if (votesSnap.exists() && key != null) {
+                            Long v = votesSnap.child(key).getValue(Long.class);
+                            votes = v != null ? v : 0;
+                            totalVotes += votes;
+                        }
+                        if (optVal != null) {
+                            options.add(optVal + " (" + votes + " głosów)");
+                        }
+                    }
+                    if (id != null && title != null) {
+                        // Dodajemy sumę głosów do tytułu lub opcji, jeśli chcesz
+                        questions.add(new QuestionTileAdapter.QuestionItem(id, title, options));
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        };
+        questionsRef.addValueEventListener(questionsListener);
+
         endVotingButton.setOnClickListener(v -> {
             if (roomCode != null) {
                 roomRef.child("active").setValue(false)
@@ -41,7 +94,6 @@ public class ModeratorVotingActivity extends AppCompatActivity {
             }
         });
 
-        // Nasłuch na zakończenie głosowania
         activeListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -64,6 +116,9 @@ public class ModeratorVotingActivity extends AppCompatActivity {
         super.onDestroy();
         if (roomRef != null && activeListener != null) {
             roomRef.child("active").removeEventListener(activeListener);
+        }
+        if (roomRef != null && questionsListener != null) {
+            roomRef.child("questions").removeEventListener(questionsListener);
         }
     }
 }
