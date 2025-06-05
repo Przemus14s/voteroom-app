@@ -32,7 +32,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SummaryActivity extends AppCompatActivity {
     private String roomCode;
@@ -172,10 +174,28 @@ public class SummaryActivity extends AppCompatActivity {
         PdfDocument.Page page = pdfDocument.startPage(pageInfo);
         Canvas canvas = page.getCanvas();
 
-        paint.setTextSize(20);
-        canvas.drawText("Podsumowanie głosowania - Pokój: " + roomCode, 40, y, paint);
-        y += 40;
-        paint.setTextSize(16);
+        paint.setTextSize(22);
+        paint.setFakeBoldText(true);
+        canvas.drawText("🗳️ Podsumowanie głosowania - Pokój: " + roomCode, 40, y, paint);
+        y += 50;
+        paint.setTextSize(18);
+        paint.setFakeBoldText(false);
+
+        // Collect unique voter IDs from all questions
+        Set<String> uniqueVoters = new HashSet<>();
+        for (DataSnapshot qSnap : snapshot.getChildren()) {
+            DataSnapshot votersSnap = qSnap.child("voters");
+            if (votersSnap.exists()) {
+                for (DataSnapshot voterIdSnap : votersSnap.getChildren()) {
+                    String voterId = voterIdSnap.getKey();
+                    if (voterId != null) {
+                        uniqueVoters.add(voterId);
+                    }
+                }
+            }
+        }
+        canvas.drawText("👥 Liczba uczestników głosowania: " + uniqueVoters.size(), 40, y, paint);
+        y += 50;
 
         for (DataSnapshot qSnap : snapshot.getChildren()) {
             String title = qSnap.child("title").getValue(String.class);
@@ -191,8 +211,10 @@ public class SummaryActivity extends AppCompatActivity {
             }
 
             if (title != null && options.exists()) {
-                canvas.drawText("Pytanie: " + title, 40, y, paint);
-                y += 25;
+                paint.setFakeBoldText(true);
+                canvas.drawText("❓ Pytanie: " + title, 40, y, paint);
+                paint.setFakeBoldText(false);
+                y += 30;
 
                 for (int i = 1; i <= 4; i++) {
                     String key = String.valueOf(i);
@@ -204,11 +226,12 @@ public class SummaryActivity extends AppCompatActivity {
                             count = v != null ? v : 0;
                         }
                         int percent = (totalVotes > 0) ? (int) ((count * 100) / totalVotes) : 0;
-                        canvas.drawText(optText + " – " + percent + "% (" + count + " głosów)", 60, y, paint);
-                        y += 20;
+                        String line = "   ✅ " + optText + " – " + percent + "% (" + count + " głosów)";
+                        canvas.drawText(line, 60, y, paint);
+                        y += 25;
                     }
                 }
-                y += 20;
+                y += 30;
                 if (y > 800) {
                     pdfDocument.finishPage(page);
                     pageNumber++;

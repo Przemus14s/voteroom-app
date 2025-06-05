@@ -1,6 +1,7 @@
 package com.example.voteroom.ui.user;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -18,11 +19,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.UUID;
+
 public class VoteActivity extends AppCompatActivity {
     private String roomCode;
     private String questionId;
     private DatabaseReference roomRef;
     private ValueEventListener activeListener;
+
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,14 @@ public class VoteActivity extends AppCompatActivity {
 
         roomCode = getIntent().getStringExtra("ROOM_CODE");
         questionId = getIntent().getStringExtra("QUESTION_ID");
+
+        // Generate or retrieve unique user ID stored in SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        userId = prefs.getString("USER_ID", null);
+        if (userId == null) {
+            userId = UUID.randomUUID().toString();
+            prefs.edit().putString("USER_ID", userId).apply();
+        }
 
         TextView questionText = findViewById(R.id.questionText);
         RadioGroup optionsRadioGroup = findViewById(R.id.optionsRadioGroup);
@@ -99,6 +112,10 @@ public class VoteActivity extends AppCompatActivity {
             DatabaseReference voteRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
                     .getReference("rooms").child(roomCode).child("questions").child(questionId).child("votes").child(selectedOption);
 
+            // Reference to voters node to store userId
+            DatabaseReference votersRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
+                    .getReference("rooms").child(roomCode).child("questions").child(questionId).child("voters").child(userId);
+
             voteRef.runTransaction(new com.google.firebase.database.Transaction.Handler() {
                 @Override
                 public com.google.firebase.database.Transaction.Result doTransaction(com.google.firebase.database.MutableData currentData) {
@@ -113,12 +130,19 @@ public class VoteActivity extends AppCompatActivity {
 
                 @Override
                 public void onComplete(DatabaseError error, boolean committed, DataSnapshot currentData) {
-                    Toast.makeText(VoteActivity.this, "Głos oddany!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(VoteActivity.this, SelectVoteActivity.class);
-                    intent.putExtra("ROOM_CODE", roomCode);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent);
-                    finish();
+                    if (committed) {
+                        // Save userId in voters node
+                        votersRef.setValue(true).addOnCompleteListener(task -> {
+                            Toast.makeText(VoteActivity.this, "Głos oddany!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(VoteActivity.this, SelectVoteActivity.class);
+                            intent.putExtra("ROOM_CODE", roomCode);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            startActivity(intent);
+                            finish();
+                        });
+                    } else {
+                        Toast.makeText(VoteActivity.this, "Błąd oddawania głosu", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         });

@@ -12,5 +12,4 @@ public class QuestionItem {
         this.title = title;
         this.options = options;
     }
-
 }

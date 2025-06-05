@@ -1,6 +1,5 @@
 package com.example.voteroom.ui;
 
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,11 @@ public class QuestionTileAdapter extends RecyclerView.Adapter<QuestionTileAdapte
         QuestionItem item = questions.get(position);
         holder.title.setText(item.title);
         if (item.options != null && !item.options.isEmpty()) {
-            holder.options.setText("Opcje: " + String.join(", ", item.options));
+            StringBuilder sb = new StringBuilder();
+            for (String opt : item.options) {
+                sb.append("- ").append(opt).append("\n");
+            }
+            holder.options.setText(sb.toString().trim());
             holder.options.setVisibility(View.VISIBLE);
         } else {
             holder.options.setText("");

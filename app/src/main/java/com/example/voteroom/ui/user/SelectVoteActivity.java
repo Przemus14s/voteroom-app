@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.voteroom.R;
 import com.example.voteroom.ui.QuestionTileAdapter;
 import com.example.voteroom.ui.SummaryActivity;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,6 +62,10 @@ public class SelectVoteActivity extends AppCompatActivity {
             startActivity(intent);
         });
         recyclerView.setAdapter(adapter);
+
+        // Dodaj obsługę przycisku powrotu do głównej
+        MaterialButton backToMainButton = findViewById(R.id.backToMainButton);
+        backToMainButton.setOnClickListener(v -> finish());
 
         roomRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
                 .getReference("rooms").child(roomCode);

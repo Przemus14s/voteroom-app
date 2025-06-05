@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
 import com.example.voteroom.ui.SummaryActivity;
+import com.example.voteroom.ui.user.VotingNotStartedActivity;
+import com.example.voteroom.ui.user.SelectVoteActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -44,14 +46,22 @@ public class JoinRoomActivity extends AppCompatActivity {
         roomRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
                 .getReference("rooms").child(roomCode);
 
-        // Nowa logika: sprawdzamy tylko pole "active"
-        roomRef.child("active").get().addOnSuccessListener(snapshot -> {
-            Boolean isActive = snapshot.getValue(Boolean.class);
+        // Pobieramy cały snapshot pokoju, aby sprawdzić czy istnieje
+        roomRef.get().addOnSuccessListener(snapshot -> {
+            if (!snapshot.exists()) {
+                // Pokój nie istnieje
+                Toast.makeText(this, "Niepoprawny kod pokoju", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Boolean isActive = snapshot.child("active").getValue(Boolean.class);
             if (isActive != null && isActive) {
+                // Pokój aktywny - przejście do głosowania
                 Intent intent = new Intent(this, SelectVoteActivity.class);
                 intent.putExtra("ROOM_CODE", roomCode);
                 startActivity(intent);
             } else {
+                // Pokój istnieje, ale głosowanie nie rozpoczęte
                 Intent intent = new Intent(this, VotingNotStartedActivity.class);
                 intent.putExtra("ROOM_CODE", roomCode);
                 startActivity(intent);
