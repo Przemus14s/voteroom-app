@@ -8,9 +8,7 @@ import android.widget.Toast;
 import com.example.voteroom.data.FirebaseDataSource;
 import com.example.voteroom.ui.moderator.CreateRoomActivity;
 import com.example.voteroom.ui.moderator.ModeratorRoomActivity;
-import com.example.voteroom.ui.moderator.ModeratorVotingActivity;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;

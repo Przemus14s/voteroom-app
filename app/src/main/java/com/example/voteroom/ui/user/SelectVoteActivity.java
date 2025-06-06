@@ -63,7 +63,6 @@ public class SelectVoteActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapter);
 
-        // Dodaj obsługę przycisku powrotu do głównej
         MaterialButton backToMainButton = findViewById(R.id.backToMainButton);
         backToMainButton.setOnClickListener(v -> finish());
 
@@ -86,7 +85,7 @@ public class SelectVoteActivity extends AppCompatActivity {
                     String id = qSnap.getKey();
                     String title = qSnap.child("title").getValue(String.class);
 
-                    // Pobierz opcje, jeśli są w bazie
+
                     List<String> options = new ArrayList<>();
                     DataSnapshot optionsSnap = qSnap.child("options");
                     for (DataSnapshot opt : optionsSnap.getChildren()) {

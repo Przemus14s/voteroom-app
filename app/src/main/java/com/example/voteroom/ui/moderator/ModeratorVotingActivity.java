@@ -1,4 +1,3 @@
-// ModeratorVotingActivity.java
 package com.example.voteroom.ui.moderator;
 
 import android.content.Intent;
@@ -44,7 +43,7 @@ public class ModeratorVotingActivity extends AppCompatActivity {
 
         RecyclerView votingRecyclerView = findViewById(R.id.votingRecyclerView);
         adapter = new QuestionTileAdapter(questions, (questionId, title) -> {
-            // Brak akcji po kliknięciu w trybie moderatora
+
         });
         votingRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         votingRecyclerView.setAdapter(adapter);
@@ -75,14 +74,16 @@ public class ModeratorVotingActivity extends AppCompatActivity {
                         }
                     }
                     if (id != null && title != null) {
-                        // Dodajemy sumę głosów do tytułu lub opcji, jeśli chcesz
+
                         questions.add(new QuestionTileAdapter.QuestionItem(id, title, options));
                     }
                 }
                 adapter.notifyDataSetChanged();
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         };
         questionsRef.addValueEventListener(questionsListener);
 
@@ -105,8 +106,10 @@ public class ModeratorVotingActivity extends AppCompatActivity {
                     finish();
                 }
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         };
         roomRef.child("active").addValueEventListener(activeListener);
     }

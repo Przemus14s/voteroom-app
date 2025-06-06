@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/addQuestionTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Dodaj Pytanie"
         android:textColor="#22306D"
@@ -21,10 +21,10 @@
         android:shadowDx="0"
         android:shadowDy="1"
         android:shadowRadius="2"
+        android:layout_marginBottom="20dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="20dp"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <EditText
         android:id="@+id/questionField"
@@ -100,12 +100,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Przycisk Zapisz - ułożony pod opcjami -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveQuestionButton"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Zapisz Pytanie"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:backgroundTint="#22306D"
+        android:elevation="4dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        app:cornerRadius="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/option4Field"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="#332A5DDE" />
+
+    <!-- Przycisk Wróć - przyklejony do dołu -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/backButton"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:elevation="4dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
@@ -115,31 +137,12 @@
         android:textSize="18sp"
         app:backgroundTint="#E3EAF4"
         app:cornerRadius="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/saveQuestionButton"
-        app:rippleColor="#332A5DDE" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/saveQuestionButton"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="204dp"
-        android:elevation="4dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:text="Zapisz Pytanie"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:backgroundTint="#22306D"
-        app:cornerRadius="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/option4Field"
+        app:layout_constraintVertical_bias="1.0"
         app:rippleColor="#332A5DDE" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

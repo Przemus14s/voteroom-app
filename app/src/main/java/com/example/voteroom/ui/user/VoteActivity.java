@@ -37,7 +37,6 @@ public class VoteActivity extends AppCompatActivity {
         roomCode = getIntent().getStringExtra("ROOM_CODE");
         questionId = getIntent().getStringExtra("QUESTION_ID");
 
-        // Generate or retrieve unique user ID stored in SharedPreferences
         SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
         userId = prefs.getString("USER_ID", null);
         if (userId == null) {
@@ -112,7 +111,7 @@ public class VoteActivity extends AppCompatActivity {
             DatabaseReference voteRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
                     .getReference("rooms").child(roomCode).child("questions").child(questionId).child("votes").child(selectedOption);
 
-            // Reference to voters node to store userId
+
             DatabaseReference votersRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
                     .getReference("rooms").child(roomCode).child("questions").child(questionId).child("voters").child(userId);
 
@@ -131,7 +130,7 @@ public class VoteActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(DatabaseError error, boolean committed, DataSnapshot currentData) {
                     if (committed) {
-                        // Save userId in voters node
+
                         votersRef.setValue(true).addOnCompleteListener(task -> {
                             Toast.makeText(VoteActivity.this, "Głos oddany!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(VoteActivity.this, SelectVoteActivity.class);
@@ -163,8 +162,10 @@ public class VoteActivity extends AppCompatActivity {
                     finish();
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError error) {}
+            public void onCancelled(DatabaseError error) {
+            }
         };
         roomRef.addValueEventListener(activeListener);
     }

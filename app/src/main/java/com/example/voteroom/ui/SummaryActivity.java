@@ -181,7 +181,6 @@ public class SummaryActivity extends AppCompatActivity {
         paint.setTextSize(18);
         paint.setFakeBoldText(false);
 
-        // Collect unique voter IDs from all questions
         Set<String> uniqueVoters = new HashSet<>();
         for (DataSnapshot qSnap : snapshot.getChildren()) {
             DataSnapshot votersSnap = qSnap.child("voters");

@@ -1,9 +1,30 @@
 package com.example.voteroom.ui;
-import android.graphics.Color; import android.os.Bundle; import android.widget.TextView; import android.widget.Toast;
+
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.voteroom.R; import com.github.mikephil.charting.charts.BarChart; import com.github.mikephil.charting.components.XAxis; import com.github.mikephil.charting.data.BarData; import com.github.mikephil.charting.data.BarDataSet; import com.github.mikephil.charting.data.BarEntry; import com.github.mikephil.charting.formatter.IndexAxisValueFormatter; import com.google.firebase.database.DataSnapshot; import com.google.firebase.database.DatabaseReference; import com.google.firebase.database.FirebaseDatabase;
-import java.util.ArrayList; import java.util.HashMap; import java.util.Map;
-public class ResultsActivity extends AppCompatActivity { private String roomCode, questionId;
+
+import com.example.voteroom.R;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ResultsActivity extends AppCompatActivity {
+    private String roomCode, questionId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +54,6 @@ public class ResultsActivity extends AppCompatActivity { private String roomCode
                 return;
             }
 
-            // Wyświetl tytuł pytania
             TextView titleView = findViewById(R.id.resultsTitle);
             String questionTitle = snapshot.child("title").getValue(String.class);
             if (questionTitle != null && !questionTitle.isEmpty()) {
@@ -90,7 +110,7 @@ public class ResultsActivity extends AppCompatActivity { private String roomCode
                 BarDataSet dataSet = new BarDataSet(entries, "Głosy");
 
                 // Ustaw ładne, różne kolory słupków
-                int[] colors = new int[] {
+                int[] colors = new int[]{
                         Color.parseColor("#4CAF50"), // zielony
                         Color.parseColor("#2196F3"), // niebieski
                         Color.parseColor("#FFC107"), // żółty
@@ -136,11 +156,16 @@ public class ResultsActivity extends AppCompatActivity { private String roomCode
 
     private TextView getResultTextView(int idx) {
         switch (idx) {
-            case 1: return findViewById(R.id.resultOption1);
-            case 2: return findViewById(R.id.resultOption2);
-            case 3: return findViewById(R.id.resultOption3);
-            case 4: return findViewById(R.id.resultOption4);
-            default: return null;
+            case 1:
+                return findViewById(R.id.resultOption1);
+            case 2:
+                return findViewById(R.id.resultOption2);
+            case 3:
+                return findViewById(R.id.resultOption3);
+            case 4:
+                return findViewById(R.id.resultOption4);
+            default:
+                return null;
         }
     }
 }

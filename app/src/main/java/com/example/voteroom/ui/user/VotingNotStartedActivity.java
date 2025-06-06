@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/voteroom/ui/user/VotingNotStartedActivity.java
 package com.example.voteroom.ui.user;
 
 import android.content.Intent;
@@ -9,6 +8,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
+import com.example.voteroom.util.AppLifecycleListener;
+import com.example.voteroom.util.NotificationHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,12 +27,15 @@ public class VotingNotStartedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_voting_not_started);
 
         roomCode = getIntent().getStringExtra("ROOM_CODE");
+        String roomName = getIntent().getStringExtra("ROOM_NAME");
+
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
 
         if (roomCode != null) {
             roomRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
                     .getReference("rooms").child(roomCode).child("active");
+
             activeListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
@@ -43,12 +47,35 @@ public class VotingNotStartedActivity extends AppCompatActivity {
                         finish();
                     }
                 }
+
                 @Override
                 public void onCancelled(DatabaseError error) {
                     Toast.makeText(VotingNotStartedActivity.this, "Błąd połączenia z bazą", Toast.LENGTH_SHORT).show();
                 }
             };
             roomRef.addValueEventListener(activeListener);
+
+
+            roomRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    Boolean isActive = snapshot.getValue(Boolean.class);
+                    if (isActive != null && isActive) {
+                        if (!AppLifecycleListener.isAppInForeground()) {
+                            NotificationHelper.showVotingStartedNotification(
+                                    VotingNotStartedActivity.this,
+                                    roomCode,
+                                    roomName != null ? roomName : roomCode
+                            );
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+
+                }
+            });
         }
     }
 
