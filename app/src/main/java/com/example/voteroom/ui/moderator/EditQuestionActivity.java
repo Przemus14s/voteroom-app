@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
-import com.example.voteroom.data.FirebaseDataSource;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +33,8 @@ public class EditQuestionActivity extends AppCompatActivity {
 
     private DatabaseReference optionsRef;
     private ValueEventListener optionsListener;
+
+    private static final String DB_URL = "https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class EditQuestionActivity extends AppCompatActivity {
             return;
         }
 
-        optionsRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
+        optionsRef = FirebaseDatabase.getInstance(DB_URL)
                 .getReference("rooms").child(roomCode).child("questions").child(questionId).child("options");
 
         optionsListener = new ValueEventListener() {
@@ -81,7 +82,11 @@ public class EditQuestionActivity extends AppCompatActivity {
         };
         optionsRef.addValueEventListener(optionsListener);
 
-        FirebaseDataSource.getInstance().getQuestion(roomCode, questionId, (title, options) -> {
+        DatabaseReference questionRef = FirebaseDatabase.getInstance(DB_URL)
+                .getReference("rooms").child(roomCode).child("questions").child(questionId);
+
+        questionRef.get().addOnSuccessListener(snapshot -> {
+            String title = snapshot.child("title").getValue(String.class);
             questionTitleField.setText(title != null ? title : "");
         });
 
@@ -96,7 +101,6 @@ public class EditQuestionActivity extends AppCompatActivity {
             optionField.setHint("Opcja odpowiedzi");
             optionsLayout.addView(optionField);
             optionFields.add(optionField);
-            // Zapisz nową pustą opcję do Firebase pod kolejnym numerem
             optionsRef.child(String.valueOf(optionFields.size())).setValue("");
         });
 
@@ -147,13 +151,16 @@ public class EditQuestionActivity extends AppCompatActivity {
             return;
         }
 
-        optionsRef.setValue(updatedOptions).addOnSuccessListener(aVoid -> {
-            FirebaseDataSource.getInstance().updateQuestion(roomCode, questionId, newTitle, updatedOptions,
-                    () -> {
+        DatabaseReference questionRef = FirebaseDatabase.getInstance(DB_URL)
+                .getReference("rooms").child(roomCode).child("questions").child(questionId);
+
+        questionRef.child("options").setValue(updatedOptions).addOnSuccessListener(aVoid -> {
+            questionRef.child("title").setValue(newTitle)
+                    .addOnSuccessListener(aVoid2 -> {
                         Toast.makeText(this, "Zapisano zmiany", Toast.LENGTH_SHORT).show();
                         finish();
-                    },
-                    () -> Toast.makeText(this, "Błąd zapisu", Toast.LENGTH_SHORT).show());
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Błąd zapisu tytułu", Toast.LENGTH_SHORT).show());
         }).addOnFailureListener(e -> Toast.makeText(this, "Błąd zapisu opcji", Toast.LENGTH_SHORT).show());
     }
 

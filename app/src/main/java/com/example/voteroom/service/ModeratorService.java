@@ -5,16 +5,24 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
-import com.example.voteroom.data.FirebaseDataSource;
 import com.example.voteroom.ui.moderator.CreateRoomActivity;
 import com.example.voteroom.ui.moderator.ModeratorRoomActivity;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ModeratorService {
-    private static final FirebaseDataSource firebaseDataSource = FirebaseDataSource.getInstance();
+    private static final String DB_URL = "https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/";
+
+    private static DatabaseReference getModeratorReference(String name) {
+        return FirebaseDatabase.getInstance(DB_URL).getReference("moderators").child(name);
+    }
+
+    private static DatabaseReference getRoomsReference() {
+        return FirebaseDatabase.getInstance(DB_URL).getReference("rooms");
+    }
 
     public static void login(Context context, String name, String password) {
         if (name.isBlank() || password.isBlank()) {
@@ -22,7 +30,7 @@ public class ModeratorService {
             return;
         }
 
-        DatabaseReference moderatorsRef = firebaseDataSource.getModeratorReference(name);
+        DatabaseReference moderatorsRef = getModeratorReference(name);
 
         moderatorsRef.get().addOnSuccessListener(snapshot -> {
             if (!snapshot.exists()) {
@@ -49,7 +57,7 @@ public class ModeratorService {
             return;
         }
 
-        DatabaseReference moderatorsRef = firebaseDataSource.getModeratorReference(name);
+        DatabaseReference moderatorsRef = getModeratorReference(name);
 
         moderatorsRef.get().addOnSuccessListener(snapshot -> {
             if (snapshot.exists()) {
@@ -70,7 +78,7 @@ public class ModeratorService {
             return;
         }
 
-        DatabaseReference roomsRef = firebaseDataSource.getRoomsReference();
+        DatabaseReference roomsRef = getRoomsReference();
         String roomCode = String.valueOf((int) (Math.random() * 900000) + 100000);
 
         Map<String, Object> roomData = new HashMap<>();
@@ -93,13 +101,11 @@ public class ModeratorService {
     }
 
     public static void startVoting(Context context, String roomCode) {
-        DatabaseReference roomRef = firebaseDataSource.getRoomsReference().child(roomCode);
+        DatabaseReference roomRef = getRoomsReference().child(roomCode);
 
         roomRef.child("questions").get().addOnSuccessListener(snapshot -> {
             if (snapshot.exists() && snapshot.getChildrenCount() > 0) {
                 roomRef.child("active").setValue(true).addOnSuccessListener(aVoid -> Toast.makeText(context, "Głosowanie rozpoczęte", Toast.LENGTH_SHORT).show()
-
-
                 ).addOnFailureListener(e -> Toast.makeText(context, "Błąd przy rozpoczynaniu głosowania", Toast.LENGTH_SHORT).show());
             } else {
                 Toast.makeText(context, "Dodaj przynajmniej jedno pytanie przed rozpoczęciem głosowania", Toast.LENGTH_SHORT).show();
@@ -108,7 +114,7 @@ public class ModeratorService {
     }
 
     public static void closeRoom(Context context, String code) {
-        DatabaseReference roomRef = firebaseDataSource.getRoomsReference().child(code);
+        DatabaseReference roomRef = getRoomsReference().child(code);
 
         roomRef.removeValue().addOnSuccessListener(aVoid -> {
             Toast.makeText(context, "Pokój zamknięty", Toast.LENGTH_SHORT).show();

@@ -5,19 +5,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.voteroom.R;
+import com.example.voteroom.service.UserService;
 import com.example.voteroom.ui.QuestionTileAdapter;
 import com.example.voteroom.ui.SummaryActivity;
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -29,7 +25,6 @@ public class SelectVoteActivity extends AppCompatActivity {
     private QuestionTileAdapter adapter;
     private List<QuestionTileAdapter.QuestionItem> questions = new ArrayList<>();
 
-    private DatabaseReference roomRef;
     private ValueEventListener questionsListener;
     private ValueEventListener activeListener;
 
@@ -66,37 +61,16 @@ public class SelectVoteActivity extends AppCompatActivity {
         MaterialButton backToMainButton = findViewById(R.id.backToMainButton);
         backToMainButton.setOnClickListener(v -> finish());
 
-        roomRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
-                .getReference("rooms").child(roomCode);
-
         listenForRoomActive();
         listenForQuestions();
     }
 
     private void listenForQuestions() {
-        DatabaseReference questionsRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
-                .getReference("rooms").child(roomCode).child("questions");
-
-        questionsListener = new ValueEventListener() {
+        questionsListener = UserService.listenForQuestions(roomCode, new UserService.QuestionsCallback() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onQuestionsLoaded(List<QuestionTileAdapter.QuestionItem> loadedQuestions) {
                 questions.clear();
-                for (DataSnapshot qSnap : snapshot.getChildren()) {
-                    String id = qSnap.getKey();
-                    String title = qSnap.child("title").getValue(String.class);
-
-
-                    List<String> options = new ArrayList<>();
-                    DataSnapshot optionsSnap = qSnap.child("options");
-                    for (DataSnapshot opt : optionsSnap.getChildren()) {
-                        String optVal = opt.getValue(String.class);
-                        if (optVal != null) options.add(optVal);
-                    }
-
-                    if (id != null && title != null) {
-                        questions.add(new QuestionTileAdapter.QuestionItem(id, title, options));
-                    }
-                }
+                questions.addAll(loadedQuestions);
                 adapter.notifyDataSetChanged();
                 if (questions.isEmpty()) {
                     Toast.makeText(SelectVoteActivity.this, "Brak głosowań w tym pokoju", Toast.LENGTH_SHORT).show();
@@ -106,20 +80,17 @@ public class SelectVoteActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                Toast.makeText(SelectVoteActivity.this, "Błąd pobierania pytań", Toast.LENGTH_SHORT).show();
+            public void onError(String error) {
+                Toast.makeText(SelectVoteActivity.this, error, Toast.LENGTH_SHORT).show();
             }
-        };
-        questionsRef.addValueEventListener(questionsListener);
+        });
     }
 
     private void listenForRoomActive() {
-        activeListener = new ValueEventListener() {
+        activeListener = UserService.listenForRoomActive(roomCode, new UserService.RoomActiveCallback() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Boolean isActive = snapshot.getValue(Boolean.class);
-
-                if (isActive != null && !isActive) {
+            public void onRoomActiveChanged(boolean isActive) {
+                if (!isActive) {
                     Toast.makeText(SelectVoteActivity.this, "Pokój został zamknięty", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SelectVoteActivity.this, SummaryActivity.class);
                     intent.putExtra("ROOM_CODE", roomCode);
@@ -130,22 +101,16 @@ public class SelectVoteActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onError(String error) {
             }
-        };
-        roomRef.child("active").addValueEventListener(activeListener);
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (roomRef != null && activeListener != null) {
-            roomRef.child("active").removeEventListener(activeListener);
-        }
-        if (questionsListener != null) {
-            DatabaseReference questionsRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
-                    .getReference("rooms").child(roomCode).child("questions");
-            questionsRef.removeEventListener(questionsListener);
+        if (activeListener != null) {
+            UserService.removeRoomActiveListener(roomCode, activeListener);
         }
     }
 }

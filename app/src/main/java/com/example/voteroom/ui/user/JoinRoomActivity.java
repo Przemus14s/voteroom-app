@@ -9,9 +9,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voteroom.R;
+import com.example.voteroom.service.UserService;
 import com.example.voteroom.ui.SummaryActivity;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class JoinRoomActivity extends AppCompatActivity {
@@ -19,7 +18,6 @@ public class JoinRoomActivity extends AppCompatActivity {
     private Button joinRoomButton, backButton;
     private String roomCode;
     private ValueEventListener activeListener;
-    private DatabaseReference roomRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,64 +39,37 @@ public class JoinRoomActivity extends AppCompatActivity {
             return;
         }
 
-        roomRef = FirebaseDatabase.getInstance("https://voteroom-default-rtdb.europe-west1.firebasedatabase.app/")
-                .getReference("rooms").child(roomCode);
-
-        roomRef.get().addOnSuccessListener(snapshot -> {
-            if (!snapshot.exists()) {
-
-                Toast.makeText(this, "Niepoprawny kod pokoju", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Boolean isActive = snapshot.child("active").getValue(Boolean.class);
-            String roomName = snapshot.child("name").getValue(String.class);
-
-            if (isActive != null && isActive) {
-                // Pokój aktywny - przejście do głosowania
-                Intent intent = new Intent(this, SelectVoteActivity.class);
-                intent.putExtra("ROOM_CODE", roomCode);
-                intent.putExtra("ROOM_NAME", roomName);
-                startActivity(intent);
-            } else {
-
-                Intent intent = new Intent(this, VotingNotStartedActivity.class);
-                intent.putExtra("ROOM_CODE", roomCode);
-                intent.putExtra("ROOM_NAME", roomName);
-                startActivity(intent);
-            }
-            finish();
-        }).addOnFailureListener(e ->
-                Toast.makeText(this, "Błąd połączenia z bazą", Toast.LENGTH_SHORT).show()
-        );
-    }
-
-    private void listenForRoomActive() {
-        if (roomRef == null) return;
-        activeListener = new ValueEventListener() {
+        UserService.checkRoom(roomCode, new UserService.CheckRoomCallback() {
             @Override
-            public void onDataChange(com.google.firebase.database.DataSnapshot snapshot) {
-                Boolean isActive = snapshot.getValue(Boolean.class);
-                if (isActive != null && !isActive) {
-                    Intent intent = new Intent(JoinRoomActivity.this, SummaryActivity.class);
-                    intent.putExtra("ROOM_CODE", roomCode);
-                    startActivity(intent);
-                    finish();
+            public void onRoomChecked(boolean exists, boolean isActive, String roomName) {
+                if (!exists) {
+                    Toast.makeText(JoinRoomActivity.this, "Niepoprawny kod pokoju", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                Intent intent;
+                if (isActive) {
+                    intent = new Intent(JoinRoomActivity.this, SelectVoteActivity.class);
+                } else {
+                    intent = new Intent(JoinRoomActivity.this, VotingNotStartedActivity.class);
+                }
+                intent.putExtra("ROOM_CODE", roomCode);
+                intent.putExtra("ROOM_NAME", roomName);
+                startActivity(intent);
+                finish();
             }
 
             @Override
-            public void onCancelled(com.google.firebase.database.DatabaseError error) {
+            public void onError(String error) {
+                Toast.makeText(JoinRoomActivity.this, error, Toast.LENGTH_SHORT).show();
             }
-        };
-        roomRef.child("active").addValueEventListener(activeListener);
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (roomRef != null && activeListener != null) {
-            roomRef.child("active").removeEventListener(activeListener);
+        if (activeListener != null) {
+            UserService.removeRoomActiveListener(roomCode, activeListener);
         }
     }
 }
