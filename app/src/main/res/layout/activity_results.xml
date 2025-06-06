@@ -35,55 +35,62 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.4"
-        app:layout_constraintBottom_toTopOf="@id/resultsList" />
+        app:layout_constraintBottom_toTopOf="@id/resultsScroll" />
 
-    <LinearLayout
-        android:id="@+id/resultsList"
+    <ScrollView
+        android:id="@+id/resultsScroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/barChart"
         app:layout_constraintBottom_toTopOf="@id/backButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/resultOption1"
+        <LinearLayout
+            android:id="@+id/resultsList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Zakopane – 60% (6 głosów)"
-            android:textColor="#22306D"
-            android:textSize="16sp"
-            android:layout_marginBottom="4dp"/>
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
 
-        <TextView
-            android:id="@+id/resultOption2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Gdańsk – 30% (3 głosy)"
-            android:textColor="#22306D"
-            android:textSize="16sp"
-            android:layout_marginBottom="4dp"/>
+            <TextView
+                android:id="@+id/resultOption1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Zakopane – 60% (6 głosów)"
+                android:textColor="#22306D"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp"/>
 
-        <TextView
-            android:id="@+id/resultOption3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Kraków – 10% (1 głos)"
-            android:textColor="#22306D"
-            android:textSize="16sp"
-            android:layout_marginBottom="4dp"/>
+            <TextView
+                android:id="@+id/resultOption2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gdańsk – 30% (3 głosy)"
+                android:textColor="#22306D"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp"/>
 
-        <TextView
-            android:id="@+id/resultOption4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Opcja 4 – 0% (0 głosów)"
-            android:textColor="#22306D"
-            android:textSize="16sp"
-            android:layout_marginBottom="4dp"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/resultOption3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Kraków – 10% (1 głos)"
+                android:textColor="#22306D"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/resultOption4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Opcja 4 – 0% (0 głosów)"
+                android:textColor="#22306D"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp"/>
+        </LinearLayout>
+    </ScrollView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/backButton"
@@ -104,6 +111,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/resultsList" />
+        app:layout_constraintTop_toBottomOf="@id/resultsScroll" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

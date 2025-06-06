@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/voteLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -39,34 +40,42 @@
             android:id="@+id/option1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:button="@drawable/radio_square_selector"
+            android:buttonTint="#22306D"
             android:text="Zakopane"
             android:textColor="#22306D"
-            android:buttonTint="#22306D" />
+            android:paddingStart="12dp" />
 
         <RadioButton
             android:id="@+id/option2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:button="@drawable/radio_square_selector"
+            android:buttonTint="#22306D"
             android:text="Gdańsk"
             android:textColor="#22306D"
-            android:buttonTint="#22306D" />
+            android:paddingStart="12dp" />
 
         <RadioButton
             android:id="@+id/option3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:button="@drawable/radio_square_selector"
+            android:buttonTint="#22306D"
             android:text="Kraków"
             android:textColor="#22306D"
-            android:buttonTint="#22306D" />
+            android:paddingStart="12dp" />
 
         <RadioButton
             android:id="@+id/option4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:button="@drawable/radio_square_selector"
             android:text="Wrocław"
             android:textColor="#22306D"
             android:buttonTint="#22306D"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:paddingStart="12dp" />
     </RadioGroup>
 
     <com.google.android.material.button.MaterialButton
